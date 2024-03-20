@@ -21,6 +21,9 @@ build:
     - main
     - feature
   image: python:3.9-slim-buster
+  before_script:
+    - mkdir -p "pypi_package"
+
   script:
     - python3 setup.py sdist bdist_wheel
   artifacts:
