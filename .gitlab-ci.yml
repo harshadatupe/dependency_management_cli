@@ -1,7 +1,6 @@
 stages:
   - test
-  - build
-  - deploy
+  - build_and_publish
 
 lint_check:
   stage: test
@@ -15,15 +14,14 @@ lint_check:
     - echo "Pylint check"
     # - pylint deps_manager/*
 
-build:
-  stage: build
+build and publish:
+  stage: build_and_publish
   only:
     - main
     - feature
   image: python:3.9-slim-buster
   before_script:
     - mkdir -p "pypi_package"
-
   script:
     - python3 setup.py sdist bdist_wheel
     - pip install twine
