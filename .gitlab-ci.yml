@@ -5,6 +5,10 @@ stages:
 
 lint_check:
   stage: test
+  only:
+    - main
+    - feature
+  image: python:3.9-slim-buster
   before_script:
     - pip install pylint
   script:
@@ -13,6 +17,10 @@ lint_check:
 
 build:
   stage: build
+  only:
+    - main
+    - feature
+  image: python:3.9-slim-buster
   script:
     - python3 setup.py sdist bdist_wheel
   artifacts:
