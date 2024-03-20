@@ -13,7 +13,7 @@ lint_check:
     - pip install pylint
   script:
     - echo "Pylint check"
-    # - pylint deps_manager/*  # Adjust this to lint your entire codebase
+    # - pylint deps_manager/*
 
 build:
   stage: build
@@ -26,6 +26,8 @@ build:
 
   script:
     - python3 setup.py sdist bdist_wheel
+    - pip install twine
+    - TWINE_PASSWORD=${TWINE_PASSWORD} TWINE_USERNAME=${USERNAME} python3 -m twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi dist/*
   artifacts:
     paths:
-      - "pypi_package/"
+      - dist/*.whl
