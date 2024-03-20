@@ -1,2 +1,0 @@
-[console_scripts]
-deps_manager = deps_manager.main:main
