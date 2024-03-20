@@ -1,0 +1,16 @@
+stages:
+  - test
+  - build
+  - deploy
+
+lint_check:
+  stage: test
+  before_script:
+    - pip install pylint
+  script:
+    - pylint deps_manager/*  # Adjust this to lint your entire codebase
+
+build:
+  stage: build
+  script:
+    - python3 setup.py sdist bdist_wheel
