@@ -2,7 +2,7 @@ stages:
   - test
   - build_and_publish
 
-lint_check:
+test:
   stage: test
   only:
     - main
@@ -13,6 +13,7 @@ lint_check:
   script:
     - echo "Pylint check"
     # - pylint deps_manager/*
+    - python3 -m unittest test_deps_manager.py
 
 build and publish:
   stage: build_and_publish
