@@ -26,10 +26,7 @@ def main():
                 raise ValueError("Missing path to requirements file.")
             update_dependencies(args.language, args.requirements)
         elif args.command == 'lock':
-            if not args.requirements or not args.lock_file:
-                raise ValueError("Missing path to requirements file or lock file.")
-            with open(args.lock_file, 'w') as lock_file:
-                lock_dependencies(args.language, args.requirements, lock_file)
+            lock_dependencies(args.language)
     except ValueError as ve:
         print(f"Error: {ve}")
     except Exception as e:

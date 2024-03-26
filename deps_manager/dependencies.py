@@ -30,8 +30,8 @@ def update_dependencies(language, requirements_file):
         subprocess.run(['conan', 'update', '-r', requirements_file], check=True)
 
 @handle_error
-def lock_dependencies(language, requirements_file, lock_file):
+def lock_dependencies(language):
     if language == 'python':
-        subprocess.run(['pip', 'freeze', '--all', '--exclude-editable', '--exclude-pip'], check=True, stdout=lock_file)
+        subprocess.run(['pipenv', 'lock'], check=True)
     elif language == 'cpp':
         subprocess.run(['conan', 'lock', '-r', requirements_file, '-o', lock_file], check=True)
