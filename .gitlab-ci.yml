@@ -13,7 +13,7 @@ test:
   script:
     - echo "Pylint check"
     # - pylint deps_manager/*
-    - python3 -m unittest test_deps_manager.py
+    - python3 -m unittest deps_manager/tests/test_deps_manager.py
 
 build and publish:
   stage: build_and_publish

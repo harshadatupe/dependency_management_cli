@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock, mock_open
-from deps_manager.dependencies import *
-from deps_manager.main import *
+from deps_manager.src.dependencies import *
+from deps_manager.src.main import *
 
 class TestDependencyManager(unittest.TestCase):
 
