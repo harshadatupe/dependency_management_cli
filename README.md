@@ -38,8 +38,8 @@ Alternatively, users can also provide input for options in interactive prompt wi
 For example,
 ```
 $ python main.py install
-Enter the path to the virtual environment: /path/to/venv
-Enter the requirements.txt file name: requirements.txt
+Enter the path to the virtual environment: /path/to/virtual/environment
+Enter the requirements.txt file name: /path/to/requirements.txt
 Enter the language (python/cpp): python
 ```
 
