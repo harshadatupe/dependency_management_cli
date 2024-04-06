@@ -4,9 +4,6 @@
 This package runs as CLI for dependency management across Python and C++ projects, abstracting language-specific package manager calls.
 Simplified dependency management tasks by enabling dependency operations like installation, uninstallation, listing, updating, and locking.
 
-# Pypi Package Link
-https://pypi.org/project/deps-manager/
-
 
 * [deps\_manager](#deps\_manager)
 * [Description](#package-description)
