@@ -4,6 +4,9 @@
 This package runs as CLI for dependency management across Python and C++ projects, abstracting language-specific package manager calls.
 Simplified dependency management tasks by enabling dependency operations like installation, uninstallation, listing, updating, and locking.
 
+# Pypi Package Link
+https://pypi.org/project/deps-manager/
+
 
 * [deps\_manager](#deps\_manager)
 * [Description](#package-description)
@@ -31,6 +34,7 @@ https://pypi.org/project/deps-manager/
 #### From the Command Line
 
 command to get package usage help: ```deps_manager --help```
+<<<<<<< HEAD
 command to install packages: ```deps-manager install -l python -r /path/to/requirements.txt --venv_path /path/to/virtual/environment```
 Alternatively, users can also provide input for options in interactive prompt without the need for additional command-line arguments. 
 For example,
@@ -39,6 +43,9 @@ Enter the path to the virtual environment: /path/to/venv
 Enter the requirements.txt file name: requirements.txt
 Enter the language (python/cpp): python
 ```
+=======
+command to install packages: ```deps-manager install -l python -r /path/to/requirements.txt --venv_path </path/to/virtual/environment>```
+>>>>>>> 3044130df3d0d2c5cf23fe64260f4d229db87fbc
 
 ### Installation
 * [deps\_manager](#deps\_manager)
