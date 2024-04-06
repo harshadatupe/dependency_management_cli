@@ -1,8 +1,8 @@
 """
-This main.py module acts as a cli interface to parse the user inputs in command line
+The main.py module acts as a cli interface to parse the user inputs in command line
 and executes related function from dependencies.py module.
 """
-# Python standard library imports
+# Third party library imports
 import click
 
 # Local application imports
