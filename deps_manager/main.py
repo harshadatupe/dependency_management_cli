@@ -3,50 +3,72 @@ This main.py module acts as a cli interface to parse the user inputs in command 
 and executes related function from dependencies.py module.
 """
 # Python standard library imports
-import argparse
+import click
 
 # Local application imports
 from .dependencies import *
 
 
-def main():
+def common_options(function):
     """
-    The main function acts as a CLI to parse input from user and executes the commands and 
-    returns result to user on stdout.
+    Decorator to define common click options.
     """
-    parser = argparse.ArgumentParser(description="Project Dependency Manager")
-    parser.add_argument('language', choices=['python', 'cpp'], help="Language of the project")
-    parser.add_argument('command', choices=['install', 'uninstall', 'list', 'update', 'lock'], help="Command to execute")
-    parser.add_argument('--requirements', '-r', help="Path to requirements file")
-    parser.add_argument('--package', '-p', help="Package name")
-    parser.add_argument('--lock_file', '-l', help="Name of the lock file")
-    parser.add_argument('--venv', '-v', help="Path to the virtual environment")
-    args = parser.parse_args()
+    function = click.option('-v', '--venv_path', prompt="Enter the path to the virtual environment",
+                            help="Path to the virtual environment")(function)
+    function = click.option('-l', '--language', prompt="Enter the language", type=click.Choice(['python', 'cpp']),
+                            help="Project Language to manage the dependencies")(function)
+    return function
 
-    try:
-        if args.command == 'install':
-            if not args.requirements:
-                raise ValueError("Missing path to requirements file.")
-            install_dependencies(args.language, args.requirements, args.venv)
-        elif args.command == 'uninstall':
-            if not args.package:
-                raise ValueError("Missing package name.")
-            uninstall_dependency(args.language, args.package, args.venv)
-        elif args.command == 'list':
-            list_dependencies(args.language, args.venv)
-        elif args.command == 'update':
-            if not args.requirements:
-                raise ValueError("Missing path to requirements file.")
-            update_dependencies(args.language, args.requirements, args.venv)
-        elif args.command == 'lock':
-            if not args.lock_file:
-                raise ValueError("Missing name of the requirements lock file.")
-            lock_dependencies(args.language, args.venv, args.lock_file)
-    except ValueError as ve:
-        print(f"Error: {ve}")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+def requirements_option(function):
+    """
+    Decorator for the requirements file option.
+    """
+    return click.option('-r', '--requirements_file', prompt="Enter the requirements.txt file name", required=True,
+                        help="Path to requirements file")(function)
 
 
-if __name__ == "__main__":
-    main()
+@click.group()
+def cli():
+    """Command Line Interface for managing project dependencies."""
+    pass
+
+
+@cli.command()
+@common_options
+@requirements_option
+def install(venv_path, requirements_file, language):
+    """Install dependencies from a requirements file."""
+    install_dependencies(requirements_file, language, venv_path)
+
+@cli.command()
+@common_options
+@click.option('-p', '--package_name', prompt="Enter the package name you need to uninstall", required=True,
+              help="Package name to uninstall")
+def uninstall(venv_path, language, package_name):
+    """Uninstall a package."""
+    uninstall_dependency(package_name, language, venv_path)
+
+@cli.command()
+@common_options
+def list(venv_path, language):
+    """List installed packages."""
+    list_dependencies(language, venv_path)
+
+@cli.command()
+@common_options
+@requirements_option
+def update(venv_path, requirements_file, language):
+    """Update dependencies from a requirements file."""
+    update_dependencies(requirements_file, language, venv_path)
+
+@cli.command()
+@common_options
+@click.option('-lf', '--lock_file', prompt="Enter the lock file name with its absolute path", required=True,
+              help="Name of the lock file to lock and save dependencies")
+def lock(venv_path, language, lock_file):
+    """Generate a lock file for dependencies."""
+    lock_dependencies(lock_file, language, venv_path)
+
+
+if __name__ == '__main__':
+    cli()
