@@ -30,11 +30,14 @@ https://pypi.org/project/deps-manager/
 
 #### From the Command Line
 
-command to get package usage help: ```deps_manager --help```
-command to install packages: ```deps-manager install -l python -r /path/to/requirements.txt --venv_path /path/to/virtual/environment```
+command to get package usage help: ```$ deps_manager --help```
+
+command to install packages: ```$ deps-manager install -l python -r /path/to/requirements.txt --venv_path /path/to/virtual/environment```
+
 Alternatively, users can also provide input for options in interactive prompt without the need for additional command-line arguments. 
 For example,
-``` python main.py install
+```
+$ python main.py install
 Enter the path to the virtual environment: /path/to/venv
 Enter the requirements.txt file name: requirements.txt
 Enter the language (python/cpp): python
@@ -48,10 +51,10 @@ Install the package with:
 
 To install from source and develop:
 ```
-git clone git@gitlab.com:harshadatupe8/dependency_manager_cli.git
-cd dependency_manager_cli
-python3 setup.py sdist bdist_wheel
-python3 setup.py develop
+$ git clone git@gitlab.com:harshadatupe8/dependency_manager_cli.git
+$ cd dependency_manager_cli
+$ python3 setup.py sdist bdist_wheel
+$ python3 setup.py develop
 ```
 
 ## History
