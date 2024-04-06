@@ -28,6 +28,7 @@ def requirements_option(function):
 
 
 @click.group()
+@click.version_option()
 def cli():
     """Command Line Interface for managing project dependencies."""
     pass
