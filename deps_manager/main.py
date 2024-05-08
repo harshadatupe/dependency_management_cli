@@ -77,8 +77,6 @@ def remove_unused(venv_path, language):
     remove_unused_dependencies(language, venv_path)
 
 @cli.command()
-@click.option('-l', '--language', prompt="Enter the language", type=click.Choice(['python', 'cpp']),
-             help="Project language to manage the dependencies")
 @click.option('-td', '--tests_dir', required=True,
               prompt="Enter the tests directory name of the project",
               help="Name of the directory containing the project's tests")
