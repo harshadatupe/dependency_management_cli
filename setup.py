@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='deps-manager',
-    version='1.0.2',
+    version='1.0.3',
     author="Harshada Tupe",
     author_email="harshadatupe8@gmail.com",
     license="MIT",
