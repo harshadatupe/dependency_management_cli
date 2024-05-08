@@ -16,7 +16,7 @@ def common_options(function):
     function = click.option('-v', '--venv_path', prompt="Enter the path to the virtual environment",
                             help="Path to the virtual environment")(function)
     function = click.option('-l', '--language', prompt="Enter the language", type=click.Choice(['python', 'cpp']),
-                            help="Project Language to manage the dependencies")(function)
+                            help="Project language to manage the dependencies")(function)
     return function
 
 def requirements_option(function):
@@ -69,6 +69,12 @@ def update(venv_path, requirements_file, language):
 def lock(venv_path, language, lock_file):
     """Generate a lock file for dependencies."""
     lock_dependencies(lock_file, language, venv_path)
+
+@cli.command()
+@common_options
+def remove_unused(venv_path, language):
+    """Remove unused dependencies."""
+    remove_unused_dependencies(language, venv_path)
 
 
 if __name__ == '__main__':
