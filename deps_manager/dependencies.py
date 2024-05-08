@@ -10,6 +10,17 @@ import os
 from .utils import handle_error
 
 
+def print_divider(spacing=0):
+    """
+    Print a divider with the specified character and length.
+    """
+    # Create the divider
+    divider = "#" * 67
+
+    # Print with specified spacing
+    print("\n" * spacing + divider)
+
+
 @handle_error
 def install_dependencies(requirements_file, language, venv_path):
     """
@@ -100,29 +111,53 @@ def remove_unused_dependencies(language, venv_path):
         pip_executable = 'pip'
         if venv_path:
             pip_executable = f"{venv_path}/bin/pip"
+        
+        # Get current packages
+        current_reqs = subprocess.run([pip_executable, 'freeze'], capture_output=True, text=True)
+        current_packages = set([line.split('==')[0] for line in current_reqs.stdout.splitlines()])
 
         # Ensure pipreqs is installed
         ensure_pipreqs_installed(pip_executable)
 
-        # Get current requirements
-        current_reqs = subprocess.run([pip_executable, 'freeze'], capture_output=True, text=True)
-        current_packages = set([line.split('==')[0] for line in current_reqs.stdout.splitlines()])
+        # Delete existing requirements.txt if it exists
+        if os.path.exists("requirements.txt"):
+            os.remove("requirements.txt")
 
-        # Get used dependencies based on import statements
+        # Run pipreqs to generate a new requirements.txt
         pipreqs_executable = 'pipreqs'
-        used_reqs = subprocess.run([pipreqs_executable, '.'], capture_output=True, text=True)
-        used_packages = set([line.split('==')[0] for line in used_reqs.stdout.splitlines()])
+        subprocess.run([pipreqs_executable, '.'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # Read the generated requirements.txt to get used packages
+        with open("requirements.txt", "r") as f:
+            used_packages = set(line.split("==")[0] for line in f.readlines())
 
         # Uninstall unused dependencies
         unused_packages = current_packages - used_packages
+        
         for package in unused_packages:
             subprocess.run([pip_executable, 'uninstall', '-y', package], check=True)
+        
+        print_divider(2)
+        print("Packages that were installed:")
+        for package in current_packages:
+            print(f" - {package}")
+        print_divider()
+        print_divider(2)
+        print("Packages that are needed for the project:")
+        for package in used_packages:
+            print(f" - {package}")
+        print_divider()
+
         if unused_packages:
+            print_divider(2)
             print("The following unused packages have been removed:")
             for package in unused_packages:
                 print(f" - {package}")
+            print_divider()
         else:
+            print_divider(2)
             print("No unused packages to remove.")
+            print_divider()
     elif language == 'cpp':
         # Get the Conan dependency tree
         conan_executable = 'conan'
