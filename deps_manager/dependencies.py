@@ -181,3 +181,84 @@ def remove_unused_dependencies(language, venv_path):
                 print(f" - {unused_dep}")
         else:
             print("No unused C++ packages to remove.")
+
+
+def is_venv_activated():
+    """Helper function to check if virtual environment is activated."""
+    return 'VIRTUAL_ENV' in os.environ
+
+
+def is_deps_manager_installed():
+    """Helper function to check if deps-manager is installed in venv."""
+    try:
+        subprocess.run(
+            ['deps-manager', '--version'],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+
+def containerize_and_run_tests(language, tests_dir):
+    """
+    Containerize the project and run tests in a specified directory.
+    """
+    # Ensure the virtual environment is activated
+    if not is_venv_activated():
+        print("This command must be executed from within an active virtual environment.")
+        print("Please activate your virtual environment and try again.")
+        return
+
+    # Ensure deps-manager is installed
+    if not is_deps_manager_installed():
+        print("This command requires 'deps-manager' to be installed in the current virtual environment.")
+        print("Please install 'deps-manager' by running 'pip install deps-manager' command and try again.")
+        return
+
+    # Ensure Docker is installed
+    try:
+        subprocess.run(
+            ['docker', '--version'],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    except subprocess.CalledProcessError:
+        print("Docker is not installed or not running. Please install Docker to proceed.")
+        return
+    
+    # Create a Dockerfile
+    dockerfile_content = f"""
+    # Base image with Python installed
+    FROM python:3.8-slim
+
+    # Set the working directory in the container
+    WORKDIR /app
+
+    # Copy the project files into the container
+    COPY . /app
+
+    # Install the required dependencies
+    RUN pip install -r requirements.txt && pip install pytest
+
+    # Default command to run the specified test directory
+    CMD pytest {tests_dir}
+    """
+
+    # Write Dockerfile to a file
+    dockerfile_path = "Dockerfile"
+    with open(dockerfile_path, "w") as dockerfile:
+        dockerfile.write(dockerfile_content)
+
+    # Build the Docker container
+    build_command = ["docker", "build", "-t", "project_test", "."]
+    subprocess.run(build_command, check=True)
+
+    # Run tests in the Docker container
+    run_command = ["docker", "run", "--rm", "project_test"]
+    subprocess.run(run_command, check=True)
+
+    print("Tests completed in the Docker container.")

@@ -76,6 +76,16 @@ def remove_unused(venv_path, language):
     """Remove unused dependencies."""
     remove_unused_dependencies(language, venv_path)
 
+@cli.command()
+@click.option('-l', '--language', prompt="Enter the language", type=click.Choice(['python', 'cpp']),
+             help="Project language to manage the dependencies")
+@click.option('-td', '--tests_dir', required=True,
+              prompt="Enter the tests directory name of the project",
+              help="Name of the directory containing the project's tests")
+def containerize_and_test(language, tests_dir):
+    """Containerize and run the tests."""
+    containerize_and_run_tests(language, tests_dir)
+
 
 if __name__ == '__main__':
     cli()
