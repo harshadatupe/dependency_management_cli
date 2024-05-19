@@ -1,5 +1,6 @@
 """
-The main.py module acts as a cli interface to parse the user inputs in command line
+The main.py module acts as a cli interface to parse
+the user inputs in command line
 and executes related function from dependencies.py module.
 """
 # Third party library imports
@@ -13,9 +14,12 @@ def common_options(function):
     """
     Decorator to define common click options.
     """
-    function = click.option('-v', '--venv_path', prompt="Enter the path to the virtual environment",
+    function = click.option('-v', '--venv_path', 
+                            prompt="Enter the path to the virtual environment",
                             help="Path to the virtual environment")(function)
-    function = click.option('-l', '--language', prompt="Enter the language", type=click.Choice(['python', 'cpp']),
+    function = click.option('-l', '--language',
+                            prompt="Enter the language",
+                            type=click.Choice(['python', 'cpp']),
                             help="Project language to manage the dependencies")(function)
     return function
 
@@ -23,7 +27,9 @@ def requirements_option(function):
     """
     Decorator for the requirements file option.
     """
-    return click.option('-r', '--requirements_file', prompt="Enter the requirements.txt file name", required=True,
+    return click.option('-r', '--requirements_file',
+                        prompt="Enter the requirements.txt file name",
+                        required=True,
                         help="Path to requirements file")(function)
 
 
@@ -43,7 +49,9 @@ def install(venv_path, requirements_file, language):
 
 @cli.command()
 @common_options
-@click.option('-p', '--package_name', prompt="Enter the package name you need to uninstall", required=True,
+@click.option('-p', '--package_name',
+              prompt="Enter the package name you need to uninstall",
+              required=True,
               help="Package name to uninstall")
 def uninstall(venv_path, language, package_name):
     """Uninstall a package."""
@@ -64,7 +72,9 @@ def update(venv_path, requirements_file, language):
 
 @cli.command()
 @common_options
-@click.option('-lf', '--lock_file', prompt="Enter the lock file name with its absolute path", required=True,
+@click.option('-lf', '--lock_file',
+              prompt="Enter the lock file name with its absolute path",
+              required=True,
               help="Name of the lock file to lock and save dependencies")
 def lock(venv_path, language, lock_file):
     """Generate a lock file for dependencies."""

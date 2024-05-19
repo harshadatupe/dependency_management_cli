@@ -30,10 +30,12 @@ def install_dependencies(requirements_file, language, venv_path):
         pip_executable = 'pip'
         if venv_path:
             pip_executable = f"{venv_path}/bin/pip"  # For Linux and MacOS
-        subprocess.run([pip_executable, 'install', '-r', requirements_file], check=True)
+        subprocess.run([pip_executable, 'install', '-r',
+                        requirements_file], check=True)
     
     elif language == 'cpp':
-        subprocess.run(['conan', 'install', '-r', requirements_file], check=True)
+        subprocess.run(['conan', 'install', '-r', requirements_file],
+                        check=True)
 
 @handle_error
 def uninstall_dependency(package, language, venv_path):
@@ -70,7 +72,8 @@ def update_dependencies(requirements_file, language, venv_path):
         pip_executable = 'pip'
         if venv_path:
             pip_executable = f"{venv_path}/bin/pip"  # For Linux and MacOS
-        subprocess.run([pip_executable, 'install', '--upgrade', '-r', requirements_file], check=True)
+        subprocess.run([pip_executable, 'install', '--upgrade', '-r',
+                        requirements_file], check=True)
     elif language == 'cpp':
         subprocess.run(['conan', 'update', '-r', requirements_file], check=True)
 
@@ -82,9 +85,11 @@ def lock_dependencies(requirements_lock_file, language, venv_path):
     if language == 'python':
         if venv_path:
             python_executable = f"{venv_path}/bin/python"
-            subprocess.run([f"{venv_path}/bin/pip", "freeze"], stdout=open(requirements_lock_file, "w"), check=True)
+            subprocess.run([f"{venv_path}/bin/pip", "freeze"],
+                            stdout=open(requirements_lock_file, "w"), check=True)
     elif language == 'cpp':
-        subprocess.run(['conan', 'lock', '-r', requirements_lock_file, '-o', lock_file], check=True)
+        subprocess.run(['conan', 'lock', '-r', requirements_lock_file, '-o', 
+                        lock_file], check=True)
 
 
 @handle_error
@@ -113,7 +118,8 @@ def remove_unused_dependencies(language, venv_path):
             pip_executable = f"{venv_path}/bin/pip"
         
         # Get current packages
-        current_reqs = subprocess.run([pip_executable, 'freeze'], capture_output=True, text=True)
+        current_reqs = subprocess.run([pip_executable, 'freeze'],
+                                       capture_output=True, text=True)
         current_packages = set([line.split('==')[0] for line in current_reqs.stdout.splitlines()])
 
         # Ensure pipreqs is installed
@@ -125,7 +131,8 @@ def remove_unused_dependencies(language, venv_path):
 
         # Run pipreqs to generate a new requirements.txt
         pipreqs_executable = 'pipreqs'
-        subprocess.run([pipreqs_executable, '.'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.run([pipreqs_executable, '.'], check=True,
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         # Read the generated requirements.txt to get used packages
         with open("requirements.txt", "r") as f:
@@ -165,19 +172,21 @@ def remove_unused_dependencies(language, venv_path):
             conan_executable = f"{venv_path}/bin/conan"
         
         # Fetch the full dependency graph for the project
-        dependency_graph = subprocess.run([conan_executable, 'info', '.'], capture_output=True, text=True)
+        dependency_graph = subprocess.run([conan_executable, 'info', '.'],
+                                           capture_output=True, text=True)
         
         # Parse the dependency tree
         dependency_json = json.loads(dependency_graph.stdout)
         
         # Find unused dependencies
         unused_dependencies = set()
-        # Custom logic to identify unused dependencies based on your C++ project's structure
+        # Custom logic to identify unused dependencies based on the C++ project's structure
         
         if unused_dependencies:
             print("The following unused C++ packages have been removed:")
             for unused_dep in unused_dependencies:
-                subprocess.run([conan_executable, 'remove', '--force', unused_dep], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                subprocess.run([conan_executable, 'remove', '--force', unused_dep],
+                                check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 print(f" - {unused_dep}")
         else:
             print("No unused C++ packages to remove.")
