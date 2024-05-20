@@ -97,7 +97,7 @@ def ensure_pipreqs_installed(pip_executable):
     """
     # Check if pipreqs is installed
     try:
-        subprocess.run([pip_executable, 'pipreqs', '--version'], 
+        subprocess.run([pip_executable, 'show', 'pipreqs'], 
         check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except subprocess.CalledProcessError:
         # If not installed, install it
@@ -105,7 +105,7 @@ def ensure_pipreqs_installed(pip_executable):
         subprocess.run([pip_executable, 'install', 'pipreqs'], check=True)
 
 @handle_error
-def remove_unused_dependencies(venv_path):
+def remove_unused_dependencies(venv_path, source_code_full_path):
     """
     Remove unused dependencies.
     """
@@ -122,16 +122,18 @@ def remove_unused_dependencies(venv_path):
     ensure_pipreqs_installed(pip_executable)
 
     # Delete existing requirements.txt if it exists
-    if os.path.exists("requirements.txt"):
-        os.remove("requirements.txt")
+    requirements_file_path = f"{source_code_full_path}/requirements.txt"
+
+    if os.path.exists(requirements_file_path):
+        os.remove(requirements_file_path)
 
     # Run pipreqs to generate a new requirements.txt
-    pipreqs_executable = 'pipreqs'
-    subprocess.run([pipreqs_executable, '.'], check=True,
+    pipreqs_executable = f"{venv_path}/bin/pipreqs"
+    subprocess.run([pipreqs_executable, source_code_full_path, '--encoding', 'utf-8'], check=True,
                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     # Read the generated requirements.txt to get used packages
-    with open("requirements.txt", "r") as f:
+    with open(requirements_file_path, "r") as f:
         used_packages = set(line.split("==")[0] for line in f.readlines())
 
     # Uninstall unused dependencies
@@ -179,7 +181,7 @@ def is_deps_manager_installed():
     except subprocess.CalledProcessError:
         return False
 
-def containerize_and_run_tests(language, tests_dir):
+def containerize_and_run_tests(requirements_file, tests_dir):
     """
     Containerize the project and run tests in a specified directory.
     """
@@ -198,7 +200,7 @@ def containerize_and_run_tests(language, tests_dir):
     # Ensure Docker is installed
     try:
         subprocess.run(
-            ['docker', '--version'],
+            ['docker', 'version'],
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -219,7 +221,7 @@ def containerize_and_run_tests(language, tests_dir):
     COPY . /app
 
     # Install the required dependencies
-    RUN pip install -r requirements.txt && pip install pytest
+    RUN pip install -r {requirements_file} && pip install pytest
 
     # Default command to run the specified test directory
     CMD pytest {tests_dir}

@@ -28,7 +28,7 @@ def requirements_option(function):
     Decorator for the requirements file option.
     """
     return click.option('-r', '--requirements_file',
-                        prompt="Enter the requirements.txt file name",
+                        prompt="Enter the requirements.txt file full path",
                         required=True,
                         help="Path to requirements file")(function)
 
@@ -84,17 +84,24 @@ def lock(venv_path, language, lock_file):
 @click.option('-v', '--venv_path', 
               prompt="Enter the path to the virtual environment",
               help="Path to the virtual environment")
-def remove_unused(venv_path):
+@click.option('-sc', '--source_code_full_path', 
+              prompt="Enter the path to the source code directory in virtual environment",
+              help="Path to the source code directory")
+def remove_unused(venv_path, source_code_full_path):
     """Remove unused dependencies.
     - Currently this feature is supported for python projects only.
     """
-    remove_unused_dependencies(venv_path)
+    remove_unused_dependencies(venv_path, source_code_full_path)
 
 @cli.command()
+@click.option('-r', '--requirements_file',
+              prompt="Enter the relative path to the requirements.txt file",
+              required=True,
+              help="Path to requirements file")
 @click.option('-td', '--tests_dir', required=True,
-              prompt="Enter the tests directory name of the project",
+              prompt="Enter the relative path to the tests directory of the project",
               help="Name of the directory containing the project's tests")
-def containerize_and_test(language, tests_dir):
+def containerize_and_test(requirements_file, tests_dir):
     """
     Containerize and run the tests.
 
@@ -104,7 +111,7 @@ def containerize_and_test(language, tests_dir):
     - 'deps-manager' must be installed in the virtual environment.
     - Docker must be installed and running.
     """
-    containerize_and_run_tests(language, tests_dir)
+    containerize_and_run_tests(requirements_file, tests_dir)
 
 
 if __name__ == '__main__':
