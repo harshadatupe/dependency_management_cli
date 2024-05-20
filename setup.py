@@ -18,5 +18,6 @@ setup(
     install_requires=[
         'click',
         'conan',
+        'pipreqs',
     ],
 )
