@@ -85,7 +85,9 @@ def lock(venv_path, language, lock_file):
               prompt="Enter the path to the virtual environment",
               help="Path to the virtual environment")
 def remove_unused(venv_path):
-    """Remove unused dependencies."""
+    """Remove unused dependencies.
+    - Currently this feature is supported for python projects only.
+    """
     remove_unused_dependencies(venv_path)
 
 @cli.command()
@@ -93,7 +95,15 @@ def remove_unused(venv_path):
               prompt="Enter the tests directory name of the project",
               help="Name of the directory containing the project's tests")
 def containerize_and_test(language, tests_dir):
-    """Containerize and run the tests."""
+    """
+    Containerize and run the tests.
+
+    Before running, ensure the following requirements are met:
+    - Only applicable to Python projects.
+    - Execute within an active virtual environment.
+    - 'deps-manager' must be installed in the virtual environment.
+    - Docker must be installed and running.
+    """
     containerize_and_run_tests(language, tests_dir)
 
 
