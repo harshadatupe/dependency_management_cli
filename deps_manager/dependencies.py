@@ -74,7 +74,7 @@ def update_dependencies(requirements_file, language, venv_path):
         subprocess.run([pip_executable, 'install', '--upgrade', '-r',
                         requirements_file], check=True)
     elif language == 'cpp':
-        subprocess.run(['conan', 'update', '-r', requirements_file], check=True)
+        subprocess.run(['conan', 'install', '--update', requirements_file], check=True)
 
 @handle_error
 def lock_dependencies(requirements_lock_file, language, venv_path):
@@ -88,8 +88,7 @@ def lock_dependencies(requirements_lock_file, language, venv_path):
         subprocess.run([pip_executable, 'freeze'],
                         stdout=open(requirements_lock_file, "w"), check=True)
     elif language == 'cpp':
-        subprocess.run(['conan', 'lock', '-r', requirements_lock_file, '-o', 
-                        lock_file], check=True)
+        subprocess.run(['conan', 'lock', requirements_lock_file], check=True)
 
 @handle_error
 def ensure_pipreqs_installed(pip_executable):
