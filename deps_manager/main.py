@@ -81,10 +81,12 @@ def lock(venv_path, language, lock_file):
     lock_dependencies(lock_file, language, venv_path)
 
 @cli.command()
-@common_options
-def remove_unused(venv_path, language):
+@click.option('-v', '--venv_path', 
+              prompt="Enter the path to the virtual environment",
+              help="Path to the virtual environment")
+def remove_unused(venv_path):
     """Remove unused dependencies."""
-    remove_unused_dependencies(language, venv_path)
+    remove_unused_dependencies(venv_path)
 
 @cli.command()
 @click.option('-td', '--tests_dir', required=True,
