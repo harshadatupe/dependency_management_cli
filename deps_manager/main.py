@@ -15,7 +15,7 @@ def common_options(function):
     Decorator to define common click options.
     """
     function = click.option('-v', '--venv_path', 
-                            prompt="Enter the path to the virtual environment",
+                            prompt="Enter the path to the virtual environment, else enter NA if you prefer not to use a virtual environment",
                             help="Path to the virtual environment")(function)
     function = click.option('-l', '--language',
                             prompt="Enter the language",
@@ -45,6 +45,8 @@ def cli():
 @requirements_option
 def install(venv_path, requirements_file, language):
     """Install dependencies from a requirements file."""
+    if venv_path.lower() == "na":
+        venv_path = None
     install_dependencies(requirements_file, language, venv_path)
 
 @cli.command()
@@ -55,12 +57,16 @@ def install(venv_path, requirements_file, language):
               help="Package name to uninstall")
 def uninstall(venv_path, language, package_name):
     """Uninstall a package."""
+    if venv_path.lower() == "na":
+        venv_path = None
     uninstall_dependency(package_name, language, venv_path)
 
 @cli.command()
 @common_options
 def list(venv_path, language):
     """List installed packages."""
+    if venv_path.lower() == "na":
+        venv_path = None
     list_dependencies(language, venv_path)
 
 @cli.command()
@@ -68,6 +74,8 @@ def list(venv_path, language):
 @requirements_option
 def update(venv_path, requirements_file, language):
     """Update dependencies from a requirements file."""
+    if venv_path.lower() == "na":
+        venv_path = None
     update_dependencies(requirements_file, language, venv_path)
 
 @cli.command()
@@ -78,18 +86,20 @@ def update(venv_path, requirements_file, language):
               help="Name of the lock file to lock and save dependencies")
 def lock(venv_path, language, lock_file):
     """Generate a lock file for dependencies."""
+    if venv_path.lower() == "na":
+        venv_path = None
     lock_dependencies(lock_file, language, venv_path)
 
 @cli.command()
 @click.option('-v', '--venv_path', 
               prompt="Enter the path to the virtual environment",
-              help="Path to the virtual environment")
+              help="Path to the virtual environment.")
 @click.option('-sc', '--source_code_full_path', 
               prompt="Enter the path to the source code directory in virtual environment",
               help="Path to the source code directory")
 def remove_unused(venv_path, source_code_full_path):
     """Remove unused dependencies.
-    - Currently this feature is supported for python projects only.
+    - Currently this feature is supported for python projects in virtual environment only.
     """
     remove_unused_dependencies(venv_path, source_code_full_path)
 
@@ -100,15 +110,15 @@ def remove_unused(venv_path, source_code_full_path):
               help="Path to requirements file")
 @click.option('-td', '--tests_dir', required=True,
               prompt="Enter the relative path to the tests directory of the project",
-              help="Name of the directory containing the project's tests")
+              help="Full path to the project's tests directory")
 def containerize_and_test(requirements_file, tests_dir):
     """
     Containerize and run the tests.
 
     Before running, ensure the following requirements are met:
-    - Only applicable to Python projects.
-    - Execute within an active virtual environment.
-    - 'deps-manager' must be installed in the virtual environment.
+    - Currently supports only Python projects.
+    - Execute within a project root directory or within an active virtual environment.
+    - 'deps-manager' must be installed globally or in the virtual environment.
     - Docker must be installed and running.
     """
     containerize_and_run_tests(requirements_file, tests_dir)

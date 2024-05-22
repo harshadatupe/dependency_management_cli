@@ -164,10 +164,6 @@ def remove_unused_dependencies(venv_path, source_code_full_path):
         print("No unused packages to remove.")
         print_divider()
 
-def is_venv_activated():
-    """Helper function to check if virtual environment is activated."""
-    return 'VIRTUAL_ENV' in os.environ
-
 def is_deps_manager_installed():
     """Helper function to check if deps-manager is installed in venv."""
     try:
@@ -185,11 +181,6 @@ def containerize_and_run_tests(requirements_file, tests_dir):
     """
     Containerize the project and run tests in a specified directory.
     """
-    # Ensure the virtual environment is activated
-    if not is_venv_activated():
-        print("This command must be executed from within an active virtual environment.")
-        print("Please activate your virtual environment and try again.")
-        return
 
     # Ensure deps-manager is installed
     if not is_deps_manager_installed():
