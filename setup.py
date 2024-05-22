@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='deps-manager',
-    version='1.0.2',
+    version='1.0.11',
     author="Harshada Tupe",
     author_email="harshadatupe8@gmail.com",
     license="MIT",
@@ -16,6 +16,8 @@ setup(
         ],
     },
     install_requires=[
-        'click', 
+        'click',
+        'conan',
+        'pipreqs',
     ],
 )
