@@ -181,7 +181,6 @@ def containerize_and_run_tests(requirements_file, tests_dir):
     """
     Containerize the project and run tests in a specified directory.
     """
-
     # Ensure deps-manager is installed
     if not is_deps_manager_installed():
         print("This command requires 'deps-manager' to be installed in the current virtual environment.")
@@ -230,5 +229,9 @@ def containerize_and_run_tests(requirements_file, tests_dir):
     # Run tests in the Docker container
     run_command = ["docker", "run", "--rm", "project_test"]
     subprocess.run(run_command, check=True)
+
+    # Clean up Dockerfile
+    if os.path.exists(dockerfile_path):
+        os.remove(dockerfile_path)
 
     print("Tests completed in the Docker container.")
