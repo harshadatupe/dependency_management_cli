@@ -1,8 +1,8 @@
 
 # deps\_manager
 
-This package runs as CLI for dependency management across Python and C++ projects, abstracting language-specific package manager calls.
-Simplified dependency management tasks by enabling dependency operations like installation, uninstallation, listing, updating, and locking.
+This package runs as CLI for dependency management across Python projects, abstracting language-specific package manager calls.
+Simplified dependency management tasks by enabling dependency operations like installation, uninstallation, listing, updating, and locking. Dependency management across C++ projects is work in progress.
 
 
 * [deps\_manager](#deps\_manager)
@@ -19,8 +19,8 @@ Simplified dependency management tasks by enabling dependency operations like in
 ## Package Description
 * [deps\_manager](#deps\_manager)
 
-This package runs as CLI for dependency management across Python and C++ projects, abstracting language-specific package manager calls.
-Simplified dependency management tasks by enabling dependency operations like installation, uninstallation, listing, updating, and locking.
+This package runs as CLI for dependency management across Python projects, abstracting language-specific package manager calls.
+Simplified dependency management tasks by enabling dependency operations like installation, uninstallation, listing, updating, and locking. Dependency management across C++ projects is work in progress.
 
 ## PyPI Package Link
 https://pypi.org/project/deps-manager/
@@ -73,6 +73,7 @@ MIT License
     * Check for dependency security vulnerability.
     * Add integration with a GUI.
     * Solve dependency conflicts.
+    * Add C++ support.
 
 ## FAQ
 * [deps\_manager](#deps\_manager)

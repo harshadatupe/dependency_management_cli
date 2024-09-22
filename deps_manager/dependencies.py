@@ -214,7 +214,7 @@ def containerize_and_run_tests(requirements_file, tests_dir):
     RUN pip install -r {requirements_file} && pip install pytest
 
     # Default command to run the specified test directory
-    CMD pytest {tests_dir}
+    CMD PYTHONPATH=. pytest {tests_dir}
     """
 
     # Write Dockerfile to a file
